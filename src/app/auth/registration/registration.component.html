@@ -1,0 +1,99 @@
+<div class="main">
+  <form class="register-box" [formGroup]="registerForm" (ngSubmit)="register()">
+    <h4 class="heading">Sign up to Social Feed</h4>
+    <div class="d-flex w-100">
+      <div class="me-2 w-100">
+        <label class="ms-2">First name*</label>
+        <input
+          type="text"
+          class="form-control m-2 p-3"
+          placeholder="First name*"
+          formControlName="firstName"
+          [class.is-invalid]="
+            registerForm.controls['firstName'].invalid &&
+            (registerForm.controls['firstName'].touched || submit)
+          "
+        />
+        <div
+          *ngIf="registerForm.controls['firstName'].touched"
+          class="errmsg ms-2"
+        >
+          <div *ngIf="registerForm.controls['firstName']?.errors?.['required']">
+            <small>Empty is not allowed *</small>
+          </div>
+          <div *ngIf="registerForm.controls['firstName']?.errors?.['pattern']">
+            <small> Only alphabets are allowed *</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-100">
+        <label class="ms-2">Last name*</label>
+        <input
+          type="text"
+          class="form-control m-2 p-3"
+          placeholder="Last name*"
+          formControlName="lastName"
+          [class.is-invalid]="
+            registerForm.controls['lastName'].invalid &&
+            (registerForm.controls['lastName'].touched || submit)
+          "
+        />
+        <div
+          *ngIf="registerForm.controls['lastName'].touched"
+          class="errmsg ms-2"
+        >
+          <div *ngIf="registerForm.controls['lastName']?.errors?.['required']">
+            <small>Empty is not allowed *</small>
+          </div>
+          <div *ngIf="registerForm.controls['lastName']?.errors?.['pattern']">
+            <small> Only alphabets are allowed *</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="ms-2">Email*</label>
+    <input
+      type="text"
+      class="form-control m-2 p-3"
+      placeholder="Email id*"
+      formControlName="email"
+      [class.is-invalid]="
+        registerForm.controls['email'].invalid &&
+        (registerForm.controls['email'].touched || submit)
+      "
+    />
+    <div *ngIf="registerForm.controls['email'].touched" class="errmsg ms-2">
+      <div *ngIf="registerForm.controls['email']?.errors?.['required']">
+        <small>Empty is not allowed *</small>
+      </div>
+      <div *ngIf="registerForm.controls['email']?.errors?.['email']">
+        <small> Please Enter valid Email *</small>
+      </div>
+    </div>
+    <label class="ms-2">Password*</label>
+    <input
+      type="text"
+      class="form-control m-2 p-3"
+      placeholder="Password*"
+      formControlName="password"
+      [class.is-invalid]="
+        registerForm.controls['password'].invalid &&
+        (registerForm.controls['password'].touched || submit)
+      "
+    />
+    <div *ngIf="registerForm.controls['password'].touched" class="errmsg ms-2">
+      <div *ngIf="registerForm.controls['password']?.errors?.['required']">
+        <small>Empty is not allowed *</small>
+      </div>
+      <div *ngIf="registerForm.controls['password']?.errors?.['minlength']">
+        <small> Password should be min 8 chars *</small>
+      </div>
+    </div>
+    <button class="btn btn-primary ms-2 mt-4 p-2">SIN IN</button>
+    <p class="m-2 mt-4">
+      Already having an account?
+      <span class="special" (click)="gotoLogin()">Sign in</span>
+    </p>
+  </form>
+</div>

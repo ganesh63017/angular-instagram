@@ -1,0 +1,190 @@
+<div
+  class="d-flex justify-content-between align-items-center pt-3 ps-3 pe-3 pb-0 mb-0"
+  style="cursor: pointer"
+>
+  <div
+    class="d-flex justify-content-between align-items-center"
+    style="width: 100px"
+  >
+    <div *ngIf="likeLoading; else data">
+      <div class="spinner-border spinner-border-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <ng-template #data>
+      <div *ngIf="isLiked === false; else like">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          class="bi bi-heart"
+          viewBox="0 0 16 16"
+          (click)="liked(feedsData._id)"
+        >
+          <path
+            d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+          />
+        </svg>
+      </div>
+      <ng-template #like>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="red"
+          class="bi bi-heart-fill"
+          viewBox="0 0 16 16"
+          (click)="liked(feedsData._id)"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+          />
+        </svg>
+      </ng-template>
+    </ng-template>
+    <div *ngIf="commentLoading; else com">
+      <div class="spinner-border spinner-border-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <ng-template #com>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="25"
+        height="25"
+        fill="currentColor"
+        class="bi bi-chat-left"
+        viewBox="0 0 16 16"
+        (click)="getCommentModel(feedsData._id, false)"
+        type="button"
+        data-toggle="modal"
+        data-target="#exampleModal"
+      >
+        <path
+          d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+        />
+      </svg>
+    </ng-template>
+  </div>
+  <div *ngIf="savedLoading; else noSavedLoading">
+    <div class="spinner-border spinner-border-sm" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <ng-template #noSavedLoading>
+    <div *ngIf="isSaved; else notSave">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="25"
+        height="25"
+        fill="currentColor"
+        class="bi bi-bookmark-check-fill"
+        viewBox="0 0 16 16"
+        (click)="deleteSavedPost(feedsData._id)"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"
+        />
+      </svg>
+    </div>
+    <ng-template #notSave>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="25"
+        height="25"
+        fill="currentColor"
+        class="bi bi-bookmark"
+        viewBox="0 0 16 16"
+        (click)="savePost(feedsData._id)"
+      >
+        <path
+          d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"
+        />
+      </svg>
+    </ng-template>
+  </ng-template>
+</div>
+<div class="ps-3 pe-3">
+  <div *ngIf="feedsData['likes']['length']">
+    <p class="m-0" style="font-size: 14px; font-weight: bold">
+      {{ feedsData.likes.length }} like
+    </p>
+  </div>
+  <div class="d-flex mt-3">
+    <p class="mt-0 mb-0 me-2" style="font-weight: 600">
+      {{ feedsData.created_by.lastName }}
+    </p>
+    <p class="m-0" style="font-weight: 500">{{ feedsData.caption }}</p>
+  </div>
+  <div *ngIf="commentsCount > 0">
+    <div *ngIf="textCommentLoading; else load">
+      <div class="spinner-border spinner-border-sm m-1" role="status"></div>
+      <span class="m-1"> wait loading...........</span>
+    </div>
+    <ng-template #load>
+      <p
+        class="mt-0 mb-0"
+        style="color: gray; font-weight: 500; cursor: pointer"
+        (click)="getCommentModel(feedsData._id, true)"
+        type="button"
+        data-toggle="modal"
+        data-target="#exampleModal"
+      >
+        View all {{ commentsCount }} comments
+      </p></ng-template
+    >
+  </div>
+  <app-time [time]="feedsData['createdAt']"></app-time>
+  <div class="p-2 shadow-lg bg-gray rounded">
+    <div *ngIf="userData.user['profile_pic'] === ''; else p">
+      <ngx-avatar facebookId="1508319875"></ngx-avatar>
+    </div>
+    <ng-template #p>
+      <img
+        style="height: 4vh; border-radius: 20px; width: 4vh; margin-right: 10px"
+        [src]="'http://localhost:8080/' + userData.user['profile_pic']"
+        alt="pic"
+      />
+    </ng-template>
+
+    <input
+      (change)="commentText(Inp.value)"
+      #Inp
+      placeholder="Add your comment......."
+      type="text"
+      value="{{ message }}"
+      (focus)="onFocus()"
+      name="message"
+      style="border: none; outline: none; width: 290px"
+    />
+    <i
+      style="font-size: 22px; width: 30px"
+      (click)="toggleEmojiPicker()"
+      class="fa fa-smile-o"
+      aria-hidden="true"
+    ></i>
+
+    <button
+      style="
+        border: none;
+        background-color: transparent;
+        color: rgb(81, 175, 230);
+        font-weight: 600;
+        font-size: 18px;
+        margin-left: 150px;
+      "
+      (click)="postComment(feedsData._id)"
+    >
+      {{ postCommentLoading ? "wait..." : "Post" }}</button
+    ><br />
+    <emoji-mart
+      class="emoji-mart"
+      set="twitter"
+      *ngIf="showEmojiPicker"
+      (emojiSelect)="addEmoji($event)"
+      title="Pick your emoji…"
+    ></emoji-mart>
+  </div>
+</div>

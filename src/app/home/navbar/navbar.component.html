@@ -1,0 +1,45 @@
+<nav
+  style="cursor: pointer; position: fixed; z-index: 500; width: 100%"
+  class="d-flex justify-content-around align-items-center shadow-sm p-1 mb-5 bg-white rounded m-0 container-fluid"
+>
+  <div class="d-flex align-items-center">
+    <img
+      class="logo animation"
+      src="https://media-exp1.licdn.com/dms/image/C4E0BAQEt7xZrYWildg/company-logo_200_200/0/1626246420564?e=2159024400&v=beta&t=tOy5p1y_Xk0_2iHIaxuw3g0wZ-WGxNMvlUyczrTE72M"
+      alt="logo"
+    />
+    <p style="font-size: 20px; font-weight: 600">Life @ AM</p>
+  </div>
+  <div class="d-flex align-items-center justify-content-between w-25">
+    <em class="fa fa-home" style="font-size: 30px"></em>
+    <em
+      class="fa fa-camera"
+      style="font-size: 30px"
+      (click)="openDialog()"
+    ></em>
+    <em class="fa fa-bookmark-o" style="font-size: 30px"></em>
+    <div class="d-flex align-items-center w-50">
+      <div *ngIf="userData.user.profile_pic === ''; else profile">
+        <ngx-avatar facebookId="265"></ngx-avatar>
+      </div>
+      <ng-template #profile>
+        <!-- <img
+          style="height: 6vh; border-radius: 20px; width: 6vh"
+          [src]="'http://localhost:8080/' + userData.user.profile_pic"
+          alt="pic"
+        /> -->
+        <img
+          src="http://localhost:8080/{{ userData.user.profile_pic }}"
+          style="
+            height: 6vh;
+            border-radius: 20px;
+            width: 6vh;
+            margin-right: 10px;
+          "
+          alt="pic"
+        />
+      </ng-template>
+      <p style="font-weight: 600">{{ userData.user.lastName }}</p>
+    </div>
+  </div>
+</nav>

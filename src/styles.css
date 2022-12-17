@@ -1,1 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~ngx-toastr/toastr.css";
+@import "~@ctrl/ngx-emoji-mart/picker";
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+.login-box {
+  box-shadow: 0 2px 50px rgb(216, 213, 221);
+  min-height: 50vh;
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+}
+.register-box {
+  box-shadow: 0 2px 50px rgb(216, 213, 221);
+  min-height: 50vh;
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+}
+.heading {
+  text-align: center;
+  margin: 10px;
+}
+.errmsg {
+  color: red;
+}
+.special {
+  color: rgb(6, 124, 235);
+  cursor: pointer;
+}
+
+.icons {
+  font-size: 32px;
+}
+
+.mat-dialog-container {
+  padding: 0px !important;
+  margin-right: 100px !important;
+  position: static;
+}
+
+html,
+body {
+  height: 100%;
+  position: relative !important;
+}
+body {
+  margin: 0;
+  font-family: Lato;
+}

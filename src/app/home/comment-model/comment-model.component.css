@@ -1,0 +1,9 @@
+.close {
+  color: black;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  margin-left: 1180px;
+  padding-left: 50px;
+}

@@ -1,0 +1,8 @@
+<div *ngIf="size; else no">
+  <small class="m-0" style="color: gray; font-weight: 600; font-size: 10px">{{
+    date
+  }}</small>
+</div>
+<ng-template #no>
+  <small class="m-0" style="color: gray; font-weight: 600">{{ date }}</small>
+</ng-template>

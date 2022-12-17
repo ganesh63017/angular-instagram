@@ -1,0 +1,408 @@
+<div *ngIf="feedData && commentsData; else loading">
+  <span class="close" (click)="onNoClick()">&times;</span>
+  <div class="d-flex">
+    <div *ngIf="feedData?.['posted_photos']['length'] === 1; else slider">
+      <img
+        [src]="'http://localhost:8080/' + feedData['posted_photos'][0]"
+        alt="feed"
+        style="margin: 0px; height: 90vh; width: 750px"
+      />
+    </div>
+    <ng-template #slider>
+      <app-slider
+        [photos]="feedData['posted_photos']"
+        [modal]="true"
+      ></app-slider>
+    </ng-template>
+    <div style="width: 450px; position: relative">
+      <div
+        class="d-flex justify-content-between align-items-center shadow-sm bg-white rounded pt-1 ps-2 pe-2"
+      >
+        <div class="d-flex justify-content-between">
+          <div *ngIf="feedData['created_by'].profile_pic === ''; else profile">
+            <ngx-avatar facebookId="265"></ngx-avatar>
+          </div>
+          <ng-template #profile>
+            <img
+              [src]="
+                'http://localhost:8080/' + feedData['created_by'].profile_pic
+              "
+              style="
+                height: 6vh;
+                border-radius: 20px;
+                width: 6vh;
+                margin-right: 10px;
+              "
+              alt="pic"
+            />
+          </ng-template>
+          <div class="m-0">
+            <p class="m-0 fs-6" style="font-weight: 600">
+              {{ feedData["created_by"].lastName }}
+            </p>
+            <p class="m-0" style="color: gray; font-size: 12px">
+              {{ feedData.location }}
+            </p>
+            <p class="m-0" style="color: rgb(101, 92, 96); font-size: 14px">
+              {{ feedData.caption }}
+            </p>
+          </div>
+        </div>
+        <app-time [time]="feedData['createdAt']" [size]="12"></app-time>
+      </div>
+      <div *ngIf="commentsData['length'] !== 0">
+        <div
+          style="height: 55vh; overflow-y: scroll"
+          class="shadow-sm bg-gray rounded"
+        >
+          <div *ngFor="let comment of commentsData">
+            <div class="d-flex justify-content-between align-items-center p-2">
+              <div class="d-flex align-items-center">
+                <div
+                  *ngIf="comment['created_by']['profile_pic'] === ''; else data"
+                >
+                  <ngx-avatar facebookId="1508319875"></ngx-avatar>
+                </div>
+                <ng-template #data>
+                  <img
+                    style="
+                      height: 6vh;
+                      border-radius: 20px;
+                      width: 6vh;
+                      margin-right: 10px;
+                    "
+                    [src]="
+                      'http://localhost:8080/' +
+                      comment['created_by']['profile_pic']
+                    "
+                    alt="pic"
+                  />
+                </ng-template>
+                <div class="m-0">
+                  <div class="d-flex m-0">
+                    <div class="m-0">
+                      <p class="m-0" style="font-weight: 600; font-size: 13px">
+                        {{ comment["created_by"]["lastName"] }}
+                      </p>
+                      <app-time [time]="comment['createdAt']"></app-time>
+                    </div>
+                    <div style="margin-left: 10px; font-size: 13px">
+                      <p class="m-0" style="color: rgb(161, 157, 157)">
+                        {{ comment.comment }}
+                      </p>
+                      <p
+                        (click)="replyToComment(comment._id)"
+                        class="m-0"
+                        style="
+                          color: rgb(99, 94, 94);
+                          font-size: 12px;
+                          font-weight: bold;
+                          cursor: pointer;
+                        "
+                      >
+                        Reply
+                      </p>
+                    </div>
+                  </div>
+                  <div *ngIf="comment['comments']['length'] !== 0">
+                    <p
+                      class="m-0"
+                      style="font-size: 12px; cursor: pointer"
+                      (click)="openRepliedComments(comment._id)"
+                    >
+                      {{ comment["comments"]["length"] }}
+                      _ replies
+                      <i
+                        [class]="
+                          openReplies.includes(comment._id)
+                            ? 'fa fa-caret-up'
+                            : 'fa fa-caret-down'
+                        "
+                        aria-hidden="true"
+                        style="font-size: 16px"
+                      ></i>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div style="cursor: pointer" class="text-center">
+                <div *ngIf="commentLikeLoading === comment._id; else N">
+                  <div
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    style="margin-right: 10px"
+                  >
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+                <ng-template #N>
+                  <div *ngIf="getIsLikedForMainComment(comment); else like">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      class="bi bi-heart"
+                      viewBox="0 0 16 16"
+                      style="margin-right: 10px"
+                      (click)="likeToComment(comment._id)"
+                    >
+                      <path
+                        d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <ng-template #like>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="red"
+                        class="bi bi-heart-fill"
+                        viewBox="0 0 16 16"
+                        (click)="likeToComment(comment._id)"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                        />
+                      </svg>
+                    </ng-template>
+                  </div>
+                </ng-template>
+
+                <small *ngIf="!getIsLikedForMainComment(comment)"
+                  >{{ comment.likes.length }} likes</small
+                >
+              </div>
+            </div>
+            <div *ngIf="openReplies.includes(comment._id)">
+              <div
+                style="margin-left: 8vh !important"
+                class="shadow-sm bg-gray rounded"
+              >
+                <div *ngFor="let reply of comment['comments']">
+                  <div
+                    class="d-flex justify-content-between align-items-center p-2"
+                  >
+                    <div class="d-flex align-items-center">
+                      <div
+                        *ngIf="
+                          reply['userDetails']['profile_pic'] === '';
+                          else data
+                        "
+                      >
+                        <ngx-avatar facebookId="1508319875"></ngx-avatar>
+                      </div>
+                      <ng-template #data>
+                        <img
+                          style="
+                            height: 4vh;
+                            border-radius: 20px;
+                            width: 4vh;
+                            margin-right: 10px;
+                          "
+                          [src]="
+                            'http://localhost:8080/' +
+                            reply['userDetails']['profile_pic']
+                          "
+                          alt="pic"
+                        />
+                      </ng-template>
+                      <div class="m-0">
+                        <div class="d-flex m-0">
+                          <div class="m-0">
+                            <p
+                              class="m-0"
+                              style="font-weight: 600; font-size: 11px"
+                            >
+                              {{ reply["userDetails"]["lastName"] }}
+                            </p>
+                            <app-time
+                              [time]="reply['time']"
+                              [size]="12"
+                            ></app-time>
+                          </div>
+                          <div style="margin-left: 10px; font-size: 16px">
+                            <small
+                              class="m-0"
+                              style="color: rgb(161, 157, 157)"
+                            >
+                              {{ reply.comment }}
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="p-2 shadow-lg bg-gray rounded"
+        style="
+          position: absolute;
+          width: 440px;
+          bottom: 0;
+          padding-bottom: 10px !important;
+        "
+      >
+        <div
+          class="d-flex justify-content-between align-items-center"
+          style="cursor: pointer"
+        >
+          <div *ngIf="likeLoading; else l">
+            <div class="spinner-border spinner-border-sm" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <ng-template #l>
+            <div *ngIf="isLiked; else emptyLike">
+              <div class="text-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="red"
+                  class="bi bi-heart-fill"
+                  viewBox="0 0 16 16"
+                  (click)="likeFeed(feedData['_id'])"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                  />
+                </svg>
+
+                <p class="m-0" style="font-size: 12px; font-weight: bold">
+                  {{ feedData.likes.length }} like
+                </p>
+                <app-time [time]="feedData.createdAt" [size]="12"></app-time>
+              </div>
+            </div>
+            <ng-template #emptyLike>
+              <div class="text-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  class="bi bi-heart m-0"
+                  viewBox="0 0 16 16"
+                  (click)="likeFeed(feedData['_id'])"
+                >
+                  <path
+                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+                  />
+                </svg>
+                <p class="m-0"></p>
+                <app-time [time]="feedData.createdAt" [size]="12"></app-time>
+              </div>
+            </ng-template>
+          </ng-template>
+          <div *ngIf="savedLoading; else noSaveLoading">
+            <div class="spinner-border spinner-border-sm" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <ng-template #noSaveLoading>
+            <div *ngIf="isSaved; else notSaved">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                fill="currentColor"
+                class="bi bi-bookmark-check-fill"
+                viewBox="0 0 16 16"
+                (click)="deleteSavedPost(feedData['_id'])"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"
+                />
+              </svg>
+            </div>
+            <ng-template #notSaved>
+              <i
+                (click)="savePost(feedData['_id'])"
+                class="fa fa-bookmark-o"
+                aria-hidden="true"
+                style="font-size: 24px"
+              ></i>
+            </ng-template>
+          </ng-template>
+        </div>
+        <div class="p-2 shadow-lg bg-gray rounded">
+          <div *ngIf="userData.user['profile_pic'] === ''; else p">
+            <ngx-avatar facebookId="1508319875"></ngx-avatar>
+          </div>
+          <ng-template #p>
+            <img
+              style="
+                height: 4vh;
+                border-radius: 20px;
+                width: 4vh;
+                margin-right: 10px;
+              "
+              [src]="'http://localhost:8080/' + userData.user['profile_pic']"
+              alt="pic"
+            />
+          </ng-template>
+
+          <input
+            (change)="commentText(comment.value)"
+            #comment
+            [placeholder]="
+              replyCommentId === ''
+                ? 'Add your comment.......'
+                : 'Reply to comment........'
+            "
+            type="text"
+            value="{{ message }}"
+            (focus)="onFocus()"
+            name="message"
+            style="border: none; outline: none; width: 290px"
+          />
+          <i
+            style="font-size: 22px; width: 30px"
+            (click)="toggleEmojiPicker()"
+            class="fa fa-smile-o"
+            aria-hidden="true"
+          ></i>
+
+          <button
+            style="
+              border: none;
+              background-color: transparent;
+              color: rgb(81, 175, 230);
+              font-weight: 600;
+              font-size: 18px;
+            "
+            (click)="postComment()"
+          >
+            {{ postCommentLoading ? "wait" : "Post" }}</button
+          ><br />
+          <emoji-mart
+            class="emoji-mart"
+            set="twitter"
+            *ngIf="showEmojiPicker"
+            (emojiSelect)="addEmoji($event)"
+            title="Pick your emoji…"
+          ></emoji-mart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #loading>
+  <div class="d-flex justify-content-center align-items-center p-5">
+    <div
+      class="spinner-border"
+      role="status"
+      style="width: 3rem; height: 3rem"
+    ></div>
+  </div>
+  <h3 class="text-center mt-5">Please wait getting feed data ..........</h3>
+</ng-template>

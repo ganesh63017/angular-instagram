@@ -1,0 +1,58 @@
+<app-navbar></app-navbar>
+<!-- <div *ngIf="loading; else data">
+  <app-loading></app-loading>
+</div>
+
+<ng-template #data>
+  <div
+    class="d-flex flex-column justify-content-center align-items-center"
+    style="padding-top: 80px"
+  >
+    <div *ngFor="let post of feedsData" class="card m-2 shadow pb-3">
+      <div class="d-flex align-items-center shadow-sm bg-white rounded">
+        <div
+          *ngIf="post['created_by']['profile_pic'] === ''; else profile"
+          class="p-2"
+        >
+          <ngx-avatar facebookId="1508319875"></ngx-avatar>
+        </div>
+        <ng-template #profile>
+          <img
+            class="p-2"
+            style="height: 8vh; width: 8vh; border-radius: 40px"
+            [src]="'http://localhost:8080/' + post['created_by']['profile_pic']"
+            alt="pic"
+          />
+        </ng-template>
+        <div>
+          <p class="m-0" style="font-weight: 600">
+            {{ post["created_by"]["lastName"] }}
+          </p>
+          <p class="m-0" style="font-size: small; color: gray">
+            {{ post["location"] }}
+          </p>
+        </div>
+      </div>
+      <div *ngIf="post['posted_photos']['length'] === 1; else slider">
+        <img
+          style="height: 80vh; width: 600px"
+          [src]="'http://localhost:8080/' + post['posted_photos'][0]"
+          alt="photo"
+        />
+      </div>
+      <ng-template #slider>
+        <app-slider [photos]="post['posted_photos']"></app-slider>
+      </ng-template>
+      <app-icons
+        [feedsData]="post"
+        [commentsData]="commentsData"
+        (likePost)="likePost($event)"
+        [likeLoading]="likeLoading"
+        (getFeeds)="getFeeds($event)"
+        (getSavedPost)="getSavedPost()"
+        [savedPost]="savedPost"
+        [savedLoading]="savedLoading"
+      ></app-icons>
+    </div>
+  </div>
+</ng-template> -->
